@@ -341,15 +341,6 @@ export default function Edit({ auth, user }) {
     return (
         <DashLayout title="Update Pendukung" auth={auth.user}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* {succesDel && (
-                    <div
-                        class="mb-4 bg-green-100 border-l-4 border-green-500 text-slate-900 p-4"
-                        role="alert"
-                    >
-                        <p class="font-bold">Succes</p>
-                        <p>{succesDel}</p>
-                    </div>
-                )} */}
                 <form onSubmit={submit} className="pt-1">
                     <div className="space-y-12">
                         <div className="border-b border-gray-900/10 pb-12">

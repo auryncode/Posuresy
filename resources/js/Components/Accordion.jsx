@@ -1,6 +1,10 @@
 import { Link } from "@inertiajs/react";
 import React, { createElement, useState } from "react";
-import { HiOutlinePencilAlt, HiOutlineTrash } from "react-icons/hi";
+import {
+    HiOutlinePencilAlt,
+    HiOutlineTrash,
+    HiOutlinePlus,
+} from "react-icons/hi";
 import DeleteButton from "./DeleteButton";
 
 const Accordion = ({ title, content, data }) => {
@@ -15,31 +19,30 @@ const Accordion = ({ title, content, data }) => {
                     </span>
                 </p>
                 <button
-                    className="underline px-4 text-sm text-gray-900 text-semibold hover:italic hover:text-blue-600"
+                    className={`underline px-4 text-sm text-gray-900 text-semibold hover:italic hover:text-blue-600 ${
+                        isOpen ? "rotate-45" : "rotate-90"
+                    } duration-500`}
                     onClick={(e) => setIsOpen(!isOpen)}
                 >
-                    View
+                    {createElement(HiOutlinePlus, {
+                        size: 25,
+                    })}
                 </button>
             </div>
             {isOpen && (
-                <div className="text-base px-4 font-sans text-gray-900 w-full py-2 bg-gray-300 rounded">
-                    <div className="flex justify-around ">
-                        {/* <ul className="flex-1 min-w-fit overflow-hidden">
-                            <li>Nama</li>
-                            <li>Nik</li>
-                            <li>Agama</li>
-                            <li>Jenis kelamin</li>
-                            <li>Alamat</li>
-                        </ul> */}
-                        <ul className="flex-1">
-                            <li>{data.nama}</li>
-                            <li>{data.nik}</li>
-                            <li>{data.agama}</li>
-                            <li>{data.jenis_kelamin}</li>
-                            <li>{`${data.dusun},${data.kelurahan},${data.kecamatan}`}</li>
-                        </ul>
+                <>
+                    <div className="text-base px-4 font-sans text-gray-900 w-full py-2 bg-gray-300 rounded">
+                        <div className="flex justify-around ">
+                            <ul className="flex-1">
+                                <li>{data.nama}</li>
+                                <li>{data.nik}</li>
+                                <li>{data.agama}</li>
+                                <li>{data.jenis_kelamin}</li>
+                                <li>{`${data.dusun},${data.kelurahan},${data.kecamatan}`}</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div className="flex gap-4 px-4 justify-end items-center">
+                    <div className="flex gap-4 px-4 py-2 rounded justify-end items-center bg-slate-200">
                         <Link
                             className="text-yellow-400 hover:text-yellow-500"
                             href={`/edit/${data.id}`}
@@ -60,7 +63,7 @@ const Accordion = ({ title, content, data }) => {
                             })}
                         </DeleteButton>
                     </div>
-                </div>
+                </>
             )}
         </div>
     );
