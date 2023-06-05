@@ -16,16 +16,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         \App\Models\Admin::factory(1)->create();
+        \App\Models\User::factory(30)->create();
 
         // \App\Models\User::create([
-        //     'id'=>Str::uuid(),
-        //     'nama' => 'required',
-        //     'nik' => 'required|unique:users',
-        //     'jenis_kelamin' => 'required',
-        //     'agama' => 'required',
-        //     'kecamatan' => 'required',
-        //     'kelurahan' => 'required',
-        //     'dusun' => 'required',
+            // 'id'=>Str::uuid(),
+            // 'nama' => 'required',
+            // 'nik' => 'required|unique:users',
+            // 'jenis_kelamin' => 'required',
+            // 'agama' => 'required',
+            // 'kecamatan' => 'required',
+            // 'kelurahan' => 'required',
+            // 'dusun' => 'required',
         // ]);
     }
 }

@@ -8,7 +8,6 @@ import {
     HiOutlineCube,
     HiOutlineUser,
     HiOutlineOfficeBuilding,
-    HiOutlineLibrary,
 } from "react-icons/hi";
 import Submenu from "@/Components/Submenu";
 
@@ -18,6 +17,7 @@ export default function AuthenticatedLayout({
     header = "",
     children,
     data = [],
+    className,
 }) {
     const [open, setIsOpen] = useState(true);
     const [openDropdown, setOpenDropdown] = useState(true);
@@ -35,11 +35,11 @@ export default function AuthenticatedLayout({
     ];
 
     return (
-        <section className="flex h-full">
+        <section className={`flex min-h-full`}>
             <div
                 className={`${
                     open ? "w-72" : "w-16"
-                } bg-[#0e0e0e] duration-500 sm:block hidden text-gray-100`}
+                } bg-[#0e0e0e] duration-500 sm:block hidden text-gray-100 min-h-full`}
             >
                 <div className="py-3 px-4 flex justify-end h-16 place-self-center">
                     <div className="flex items-center h-full">
@@ -208,7 +208,7 @@ export default function AuthenticatedLayout({
                                     Profile
                                 </ResponsiveNavLink>
                                 <Link
-                                className="text-base px-5 w-full py-3 text-start hover:bg-gray-500"
+                                    className="text-base px-5 w-full py-3 text-start hover:bg-gray-500"
                                     method="post"
                                     href={route("logout")}
                                     as="button"
@@ -227,7 +227,9 @@ export default function AuthenticatedLayout({
                         {header}
                     </div>
                 )}
-                <div className="p-3 overflow-y-auto h-screen">{children}</div>
+                <div className="p-3 overflow-y-auto scroll-smooth min-h-screen">
+                    {children}
+                </div>
             </div>
         </section>
     );

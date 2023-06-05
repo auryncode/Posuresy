@@ -15,7 +15,7 @@ class UsersController extends Controller
      */
     public function index($name, $place)
     {
-        $user = User::where($name, $place)->get();
+        $user = User::where($name, $place)->paginate(20);
         $dictinct = User::select('kecamatan')->distinct()->get();
         return Inertia::render('ListUser', [
             'user' => $user,

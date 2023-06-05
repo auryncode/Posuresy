@@ -9,10 +9,10 @@ export default function Dashboard({ auth, distinct }) {
 
             <div className="py-4">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white text-gray-900 overflow-hidden shadow-sm">
+                    <div className="px-4 bg-white text-gray-900 overflow-hidden shadow-sm">
                         <h2 className=" text-base w-full bg-blue-500 text-bold rounded px-3 py-4">
                             Pendukung {`${distinct.length} dari 17 Kecamatan`} (
-                            {Math.ceil(distinct.length / 17)}%)
+                            {Math.round((distinct.length / 17) * 100)}%)
                         </h2>
                         <div className="grid grid-flow-row rounded lg:grid-cols-3 grid-cols-2 gap-3">
                             {distinct.map((res, i) => {

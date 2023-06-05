@@ -4,6 +4,7 @@ import "jspdf-autotable";
 import { CloudArrowDownIcon } from "@heroicons/react/24/outline";
 
 const ExportPdf = ({ data, className = "" }, ...props) => {
+    console.log('data',data)
     const exportPDF = () => {
         const doc = new jsPDF();
         doc.setFont("times new roman");
@@ -23,7 +24,7 @@ const ExportPdf = ({ data, className = "" }, ...props) => {
             ]),
             styles: {
                 font: "times new roman",
-                fontSize: 10,
+                fontSize: 12,
                 head: {
                     fontSize: 14,
                     fontStyle: "bold",
