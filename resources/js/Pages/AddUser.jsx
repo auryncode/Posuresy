@@ -12,14 +12,8 @@ import { Dialog } from "@headlessui/react";
 import DeleteButton from "@/Components/DeleteButton";
 
 export default function AddUser(props) {
-    const agama = [
-        "Islam",
-        "Budha",
-        "Hindu",
-        "Konghucu",
-        "Kristen",
-        "Katholik",
-    ];
+    const [provinsi, setProvinsi] = useState([]);
+    const [kabupaten, setKabupaten] = useState([]);
     const [kecamatan, setKecamatan] = useState([]);
     const [kelurahan, setKelurahan] = useState([]);
     const [error, setError] = useState("");
@@ -34,14 +28,39 @@ export default function AddUser(props) {
         }, 3000);
     }, [message]);
 
-    const getKecamatan = async () => {
+    const getProvinsi = async () => {
+        const res = await axios.get(
+            `https://api.binderbyte.com/wilayah/provinsi`,
+            {
+                params: {
+                    api_key:
+                        "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
+                },
+            }
+        );
+        setProvinsi(res.data.value);
+    };
+    const getKabupaten = async (id) => {
+        const res = await axios.get(
+            `https://api.binderbyte.com/wilayah/kabupaten`,
+            {
+                params: {
+                    api_key:
+                        "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
+                    id_provinsi: id,
+                },
+            }
+        );
+        setKabupaten(res.data.value);
+    };
+    const getKecamatan = async (id) => {
         const res = await axios.get(
             `https://api.binderbyte.com/wilayah/kecamatan`,
             {
                 params: {
                     api_key:
                         "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
-                    id_kabupaten: 3313,
+                    id_kabupaten: id,
                 },
             }
         );
@@ -62,13 +81,14 @@ export default function AddUser(props) {
         setKelurahan(res.data.value);
     };
     useEffect(() => {
-        getKecamatan();
+        getProvinsi();
     }, []);
     const { data, setData, post, processing, errors, reset } = useForm({
         nama: "",
         nik: "",
         jenis_kelamin: "",
-        agama: "",
+        provinsi: "",
+        kabupaten: "",
         kecamatan: "",
         kelurahan: "",
         dusun: "",
@@ -76,10 +96,13 @@ export default function AddUser(props) {
 
     const submit = (e) => {
         e.preventDefault();
-        post("/add");
+        console.log(data)
         if (Object.keys(errors).length === 0) {
             setOpen(!open);
             reset();
+            setKecamatan([])
+            setKabupaten([])
+            setKelurahan([])
         }
     };
     return (
@@ -225,7 +248,7 @@ export default function AddUser(props) {
                                         <InputLabel value="Gender" />
                                         <div className="mt-4 items-center dark:border-gray-700">
                                             <TextInput
-                                                id="bordered-radio-1"
+                                                id="perempuan"
                                                 type="radio"
                                                 value="perempuan"
                                                 checked={
@@ -242,7 +265,7 @@ export default function AddUser(props) {
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                             />
                                             <label
-                                                htmlFor="bordered-radio-1"
+                                                htmlFor="perempuan"
                                                 className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                             >
                                                 Perempuan
@@ -250,7 +273,7 @@ export default function AddUser(props) {
                                         </div>
                                         <div className="mt-2 items-center dark:border-gray-700">
                                             <TextInput
-                                                id="bordered-radio-2"
+                                                id="laki-laki"
                                                 type="radio"
                                                 value="laki-laki"
                                                 checked={
@@ -267,7 +290,7 @@ export default function AddUser(props) {
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                             />
                                             <label
-                                                htmlFor="bordered-radio-2"
+                                                htmlFor="laki-laki"
                                                 className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                             >
                                                 Laki-Laki
@@ -280,71 +303,35 @@ export default function AddUser(props) {
                                     />
                                 </div>
 
-                                <div className="sm:col-span-3">
-                                    <label
-                                        htmlFor="agama"
-                                        className="block text-sm font-medium leading-6 text-gray-900"
-                                    >
-                                        Agama
-                                    </label>
-                                    <div className="mt-2">
-                                        <select
-                                            id="agama"
-                                            name="agama"
-                                            value={data.agama}
-                                            autoComplete="agama"
-                                            onChange={(e) =>
-                                                setData("agama", e.target.value)
-                                            }
-                                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                                        >
-                                            <option value="">
-                                                --Pilih Agama--
-                                            </option>
-                                            {agama.map((res, i) => {
-                                                return (
-                                                    <option key={i}>
-                                                        {res}
-                                                    </option>
-                                                );
-                                            })}
-                                        </select>
-                                    </div>
-                                    <InputError
-                                        message={errors.agama}
-                                        className="mt-2"
-                                    />
-                                </div>
-
                                 <div className="col-span-full">
                                     <label
                                         htmlFor="provinsi"
                                         className="block text-sm font-medium leading-6 text-gray-900"
                                     >
-                                        Kecamatan
+                                        Provinsi
                                     </label>
                                     <div className="mt-2">
                                         <select
                                             onChange={(e) => {
                                                 setData(
-                                                    "kecamatan",
+                                                    "provinsi",
                                                     e.target.value
                                                 );
                                             }}
-                                            value={data.kecamatan}
+                                            value={data.provinsi}
                                             id="addres"
                                             className="mt-1 rounded select select-bordered select-sm block w-full"
                                         >
                                             <option value="">
-                                                --Pilih Kecamatan--
+                                                --Pilih Provinsi--
                                             </option>
-                                            {kecamatan.map((prov, i) => {
+                                            {provinsi.map((prov, i) => {
                                                 return (
                                                     <option
                                                         key={i}
                                                         value={prov.name}
                                                         onClick={() =>
-                                                            getKelurahan(
+                                                            getKabupaten(
                                                                 prov.id
                                                             )
                                                         }
@@ -361,6 +348,52 @@ export default function AddUser(props) {
                                     />
                                 </div>
 
+                                {kabupaten.length !== 0 && (
+                                    <div className="col-span-full">
+                                        <label
+                                            htmlFor="kabupaten"
+                                            className="block text-sm font-medium leading-6 text-gray-900"
+                                        >
+                                            Kabupaten
+                                        </label>
+                                        <div className="mt-2">
+                                            <AddresSelect
+                                                getKecamatan={getKecamatan}
+                                                value={data.kabupaten}
+                                                datas={kabupaten}
+                                                dist="Kabupaten"
+                                                setDatas={setData}
+                                            />
+                                        </div>
+                                        <InputError
+                                            message={errors.kabupaten}
+                                            className="mt-2"
+                                        />
+                                    </div>
+                                )}
+                                {kecamatan.length !== 0 && (
+                                    <div className="col-span-full">
+                                        <label
+                                            htmlFor="kecamatan"
+                                            className="block text-sm font-medium leading-6 text-gray-900"
+                                        >
+                                            Kecamatan
+                                        </label>
+                                        <div className="mt-2">
+                                            <AddresSelect
+                                                getKelurahan={getKelurahan}
+                                                value={data.kecamatan}
+                                                datas={kecamatan}
+                                                dist="Kecamatan"
+                                                setDatas={setData}
+                                            />
+                                        </div>
+                                        <InputError
+                                            message={errors.kecamatan}
+                                            className="mt-2"
+                                        />
+                                    </div>
+                                )}
                                 {kelurahan.length !== 0 && (
                                     <div className="col-span-full">
                                         <label

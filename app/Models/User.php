@@ -21,7 +21,6 @@ class User extends Model
         'nama',
         'nik',
         'jenis_kelamin',
-        'agama',
         'provinsi',
         'kabupaten',
         'kecamatan',

@@ -10,8 +10,6 @@ import { HiOutlinePencilAlt, HiOutlineTrash } from "react-icons/hi";
 
 const List = (user, message) => {
     const [show, setShow] = useState(false);
-    console.log("user", user);
-
     useEffect(() => {
         if (message) {
             setShow(!show);
@@ -25,7 +23,7 @@ const List = (user, message) => {
         }
     }, [message]);
 
-    const headTable = ["Nama", "Jenis kelamin", "Agama", "Alamat", ""];
+    const headTable = ["Nama", "Jenis kelamin", "Alamat", ""];
     return (
         <div>
             {show && (
@@ -74,12 +72,9 @@ const List = (user, message) => {
                                                 {data.jenis_kelamin}
                                             </span>
                                         </td>
-                                        <td className="capitalize px-6 py-4 text-black text-semibold">
-                                            {data.agama}
-                                        </td>
                                         <td className="px-6 py-4">
                                             <div className="flex gap-2">
-                                                {`${data.dusun}, ${data.kelurahan}, ${data.kecamatan}`}
+                                                {`${data.dusun}, ${data.kelurahan}, ${data.kecamatan}, ${data.kabupaten}, ${data.provinsi}`}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">

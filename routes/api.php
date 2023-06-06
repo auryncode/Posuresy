@@ -19,3 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::delete('/delete/{nik}', [UsersController::class, 'delete']);
 
+Route::get('/all', [UsersController::class, 'all'])
+    ->name('all-users');

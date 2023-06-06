@@ -18,11 +18,12 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'=>Str::uuid(),
+            'id' => Str::uuid(),
             'nama' => fake()->name(),
             'nik' => \str_pad(mt_rand(1, 9999999999999999), 16),
             'jenis_kelamin' => fake()->sentence(3),
-            'agama' => 'islam',
+            'provinsi' => 'jawa tengah',
+            'kabupaten' => 'karanganyar',
             'kecamatan' => 'jumantono',
             'kelurahan' => 'tunggulrejo',
             'dusun' => 'kopek',

@@ -84,9 +84,8 @@ const Accordion = ({ title, content, data }) => {
                                 {data.nik}
                             </p>
                             <p>{data.jenis_kelamin}</p>
-                            <p>{data.agama}</p>
                             <p>
-                                {data.dusun},{data.kelurahan},{data.kecamatan}
+                                {data.dusun},{data.kelurahan},{data.kecamatan},{data.kabupaten},{data.provinsi}
                             </p>
                         </div>
                         <div className="flex gap-4 px-4 py-2 rounded-b justify-end items-center bg-gray-200">

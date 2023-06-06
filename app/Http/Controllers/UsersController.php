@@ -13,9 +13,18 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function all()
+    {
+        $user = User::all();
+        $respons = [
+            'user' => $user,
+            'message' => 'All User',
+        ];
+        return response()->json($respons);
+    }
     public function index($name, $place)
     {
-        $user = User::where($name, $place)->paginate(20);
+        $user = User::where($name, $place)->paginate(15);
         $dictinct = User::select('kecamatan')->distinct()->get();
         return Inertia::render('ListUser', [
             'user' => $user,

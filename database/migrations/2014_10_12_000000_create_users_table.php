@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('nama');
             $table->string('nik')->unique();
             $table->string('jenis_kelamin');
-            $table->string('agama');
-            $table->string('kabupaten')->default('Karanganyar');
+            $table->string('provinsi');
+            $table->string('kabupaten');
             $table->string('kecamatan');
             $table->string('kelurahan');
             $table->string('dusun');

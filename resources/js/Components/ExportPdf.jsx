@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { CloudArrowDownIcon } from "@heroicons/react/24/outline";
+import axios from "axios";
 
-const ExportPdf = ({ data, className = "" }, ...props) => {
-    console.log('data',data)
+const ExportPdf = ({ className = "" }, ...props) => {
+    const [data, setData] = useState([]);
+    const getData = async () => {
+        const res = await axios.get("http://localhost:8000/api/all");
+        setData(res.data.user);
+    };
+    useEffect(() => {
+        getData();
+    }, []);
     const exportPDF = () => {
-        const doc = new jsPDF();
+        const doc = new jsPDF({
+            format: "letter",
+            orientation: "portrait",
+            compress: true,
+            precision: 2,
+        });
+        doc.getFontList({ times: ["normal"] });
         doc.setFont("times new roman");
         doc.setFontSize(18);
 
@@ -14,13 +28,12 @@ const ExportPdf = ({ data, className = "" }, ...props) => {
             align: "center",
         });
         doc.autoTable({
-            head: [["Nama", "NIK", "Jenis kelamin", "Agama", "Alamat"]],
+            head: [["Nama", "NIK", "Jenis kelamin", "Alamat"]],
             body: data.map((res) => [
                 res.nama,
                 res.nik,
                 res.jenis_kelamin,
-                res.agama,
-                `${res.dusun},${res.kelurahan},${res.kecamatan}`,
+                `${res.dusun},${res.kelurahan},${res.kecamatan},${res.kabupaten},${res.provinsi}`,
             ]),
             styles: {
                 font: "times new roman",
@@ -38,6 +51,7 @@ const ExportPdf = ({ data, className = "" }, ...props) => {
     return (
         <div>
             <button
+                name="download"
                 {...props}
                 onClick={exportPDF}
                 className={`font-sans font-medium text-base rounded py-2 px-6 flex flex-row justify-center align-center gap-2 hover:bg-blue-600 hover:text-white ${className}`}
