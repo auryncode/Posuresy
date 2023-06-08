@@ -21,7 +21,7 @@ export default function AddUser(props) {
     const [delOpen, setDelOpen] = useState(false);
     const [delNik, setDelNik] = useState("");
     const [message, setMessage] = useState("");
-
+    
     useEffect(() => {
         setTimeout(() => {
             setMessage(props.flash.message);
@@ -52,6 +52,8 @@ export default function AddUser(props) {
             }
         );
         setKabupaten(res.data.value);
+        console.log(res.data.value)
+        console.log(kabupaten)
     };
     const getKecamatan = async (id) => {
         const res = await axios.get(
@@ -96,13 +98,15 @@ export default function AddUser(props) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data)
+        
+        post(route("add"));
+        console.log(errors)
         if (Object.keys(errors).length === 0) {
             setOpen(!open);
             reset();
-            setKecamatan([])
-            setKabupaten([])
-            setKelurahan([])
+            setKecamatan([]);
+            setKabupaten([]);
+            setKelurahan([]);
         }
     };
     return (

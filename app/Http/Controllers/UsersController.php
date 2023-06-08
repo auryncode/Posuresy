@@ -34,8 +34,13 @@ class UsersController extends Controller
     public function dashboard()
     {
         $dictinct = User::select('kecamatan')->distinct()->get();
+        $total=User::selectRaw('kecamatan, COUNT(*) as total')
+        ->groupBy('kecamatan')
+        ->pluck('total', 'kecamatan');
+
         return Inertia::render('Dashboard', [
-            'distinct' => $dictinct
+            'distinct' => $dictinct,
+            'total'=>$total
         ]);
     }
 
@@ -58,7 +63,8 @@ class UsersController extends Controller
             'nama' => 'required',
             'nik' => 'required|unique:users|min:16',
             'jenis_kelamin' => 'required',
-            'agama' => 'required',
+            'provinsi' => 'required',
+            'kabupaten' => 'required',
             'kecamatan' => 'required',
             'kelurahan' => 'required',
             'dusun' => 'required',
@@ -69,7 +75,8 @@ class UsersController extends Controller
         $user->nama = $request->nama;
         $user->nik = $request->nik;
         $user->jenis_kelamin = $request->jenis_kelamin;
-        $user->agama = $request->agama;
+        $user->provinsi = $request->provinsi;
+        $user->kabupaten = $request->kabupaten;
         $user->kecamatan = $request->kecamatan;
         $user->kelurahan = $request->kelurahan;
         $user->dusun = $request->dusun;
