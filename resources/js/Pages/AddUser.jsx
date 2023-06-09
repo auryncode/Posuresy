@@ -52,8 +52,6 @@ export default function AddUser(props) {
             }
         );
         setKabupaten(res.data.value);
-        console.log(res.data.value)
-        console.log(kabupaten)
     };
     const getKecamatan = async (id) => {
         const res = await axios.get(

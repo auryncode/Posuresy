@@ -17,7 +17,7 @@ export default function Dashboard({ auth, distinct,total }) {
                             {Object.entries(total).map(([res, i]) => {
                                 return (
                                     <Link
-                                        href={`listuser/kecamatan/${res.kecamatan}`}
+                                        href={`listuser/kecamatan/${res}`}
                                         className="capitalize rounded text-base hover:scale-105 duration-300 text-gray-900 p-6 bg-indigo-400 text-center hover:bg-indigo-500"
                                         key={i}
                                     >

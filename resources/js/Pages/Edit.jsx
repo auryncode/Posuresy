@@ -278,27 +278,46 @@ import { CheckIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "@headlessui/react";
 
 export default function Edit({ auth, user }) {
-    const agama = [
-        "Islam",
-        "Budha",
-        "Hindu",
-        "Konghucu",
-        "Kristen",
-        "Katholik",
-    ];
+    const [provinsi, setProvinsi] = useState([]);
+    const [kabupaten, setKabupaten] = useState([]);
     const [kecamatan, setKecamatan] = useState([]);
     const [kelurahan, setKelurahan] = useState([]);
     const [error, setError] = useState("");
     const [open, setOpen] = useState(false);
 
-    const getKecamatan = async () => {
+    const getProvinsi = async () => {
+        const res = await axios.get(
+            `https://api.binderbyte.com/wilayah/provinsi`,
+            {
+                params: {
+                    api_key:
+                        "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
+                },
+            }
+        );
+        setProvinsi(res.data.value);
+    };
+    const getKabupaten = async (id) => {
+        const res = await axios.get(
+            `https://api.binderbyte.com/wilayah/kabupaten`,
+            {
+                params: {
+                    api_key:
+                        "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
+                    id_provinsi: id,
+                },
+            }
+        );
+        setKabupaten(res.data.value);
+    };
+    const getKecamatan = async (id) => {
         const res = await axios.get(
             `https://api.binderbyte.com/wilayah/kecamatan`,
             {
                 params: {
                     api_key:
                         "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
-                    id_kabupaten: 3313,
+                    id_kabupaten: id,
                 },
             }
         );
@@ -318,14 +337,15 @@ export default function Edit({ auth, user }) {
         setKelurahan(res.data.value);
     };
     useEffect(() => {
-        getKecamatan();
-        console.log(kecamatan);
+        getProvinsi();
     }, []);
     const { data, setData, errors, reset, put } = useForm({
         nama: user.nama,
         nik: user.nik,
         jenis_kelamin: user.jenis_kelamin,
         agama: user.agama,
+        provinsi: user.provinsi,
+        kabupaten: user.kabupaten,
         kecamatan: user.kecamatan,
         kelurahan: user.kelurahan,
         dusun: user.dusun,
@@ -469,92 +489,101 @@ export default function Edit({ auth, user }) {
                                     />
                                 </div>
 
-                                <div className="sm:col-span-3">
-                                    <label
-                                        htmlFor="agama"
-                                        className="block text-sm font-medium leading-6 text-gray-900"
-                                    >
-                                        Agama
-                                    </label>
-                                    <div className="mt-2">
-                                        <select
-                                            id="agama"
-                                            name="agama"
-                                            value={data.agama}
-                                            autoComplete="agama"
-                                            onChange={(e) =>
-                                                setData({
-                                                    ...data,
-                                                    agama: e.target.value,
-                                                })
-                                            }
-                                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                                        >
-                                            <option value="">
-                                                --Pilih Agama--
-                                            </option>
-                                            {agama.map((res, i) => {
-                                                return (
-                                                    <option value={res} key={i}>
-                                                        {res}
-                                                    </option>
-                                                );
-                                            })}
-                                        </select>
-                                    </div>
-                                    <InputError
-                                        message={errors.agama}
-                                        className="mt-2"
-                                    />
-                                </div>
-
                                 <div className="col-span-full">
                                     <label
                                         htmlFor="provinsi"
                                         className="block text-sm font-medium leading-6 text-gray-900"
                                     >
-                                        Kecamatan
+                                        Provinsi
                                     </label>
                                     <div className="mt-2">
                                         <select
                                             onChange={(e) => {
                                                 setData(
-                                                    "kecamatan",
+                                                    "provinsi",
                                                     e.target.value
                                                 );
-                                                console.log(e.target.id);
                                             }}
-                                            value={data.kecamatan}
+                                            value={data.provinsi}
                                             id="addres"
                                             className="mt-1 rounded select select-bordered select-sm block w-full"
                                         >
-                                            <option value="">
-                                                --Pilih Kecamatan--
+                                            <option value={data.provinsi}>
+                                                {data.provinsi
+                                                    ? data.provinsi
+                                                    : "--Pilih Provinsi--"}
                                             </option>
-                                            {kecamatan.map((kec, i) => {
+                                            {provinsi.map((prov, i) => {
                                                 return (
                                                     <option
                                                         key={i}
-                                                        value={kec.name}
-                                                        id={kec.id}
+                                                        value={prov.name}
                                                         onClick={() =>
-                                                            getKelurahan(kec.id)
+                                                            getKabupaten(
+                                                                prov.id
+                                                            )
                                                         }
                                                     >
-                                                        {kec.name}
+                                                        {prov.name}
                                                     </option>
                                                 );
                                             })}
                                         </select>
                                     </div>
                                     <InputError
-                                        message={errors.kecamatan}
+                                        message={errors.provinsi}
                                         className="mt-2"
                                     />
                                 </div>
 
-                                {kelurahan.length !== 0 && (
-                                    <div className="sm:col-span-5">
+                                {data.kabupaten && (
+                                    <div className="col-span-full">
+                                        <label
+                                            htmlFor="kabupaten"
+                                            className="block text-sm font-medium leading-6 text-gray-900"
+                                        >
+                                            Kabupaten
+                                        </label>
+                                        <div className="mt-2">
+                                            <AddresSelect
+                                                getKecamatan={getKecamatan}
+                                                value={data.kabupaten}
+                                                datas={kabupaten}
+                                                dist="Kabupaten"
+                                                setDatas={setData}
+                                            />
+                                        </div>
+                                        <InputError
+                                            message={errors.kabupaten}
+                                            className="mt-2"
+                                        />
+                                    </div>
+                                )}
+                                {data.kecamatan && (
+                                    <div className="col-span-full">
+                                        <label
+                                            htmlFor="kecamatan"
+                                            className="block text-sm font-medium leading-6 text-gray-900"
+                                        >
+                                            Kecamatan
+                                        </label>
+                                        <div className="mt-2">
+                                            <AddresSelect
+                                                getKelurahan={getKelurahan}
+                                                value={data.kecamatan}
+                                                datas={kecamatan}
+                                                dist="Kecamatan"
+                                                setDatas={setData}
+                                            />
+                                        </div>
+                                        <InputError
+                                            message={errors.kecamatan}
+                                            className="mt-2"
+                                        />
+                                    </div>
+                                )}
+                                {data.kelurahan && (
+                                    <div className="col-span-full">
                                         <label
                                             htmlFor="kelurahan"
                                             className="block text-sm font-medium leading-6 text-gray-900"
@@ -562,36 +591,12 @@ export default function Edit({ auth, user }) {
                                             Kelurahan
                                         </label>
                                         <div className="mt-2">
-                                            <select
-                                                onChange={(e) => {
-                                                    setData(
-                                                        "kelurahan",
-                                                        e.target.value
-                                                    );
-                                                }}
+                                            <AddresSelect
                                                 value={data.kelurahan}
-                                                id="addres"
-                                                className="mt-1 rounded select select-bordered select-sm block w-full"
-                                            >
-                                                <option value="">
-                                                    --Pilih Kelurahan--
-                                                </option>
-                                                {kelurahan.map((kel, i) => {
-                                                    return (
-                                                        <option
-                                                            key={i}
-                                                            value={kel.name}
-                                                            onClick={() =>
-                                                                getKelurahan(
-                                                                    kel.id
-                                                                )
-                                                            }
-                                                        >
-                                                            {kel.name}
-                                                        </option>
-                                                    );
-                                                })}
-                                            </select>
+                                                datas={kelurahan}
+                                                dist="Kelurahan"
+                                                setDatas={setData}
+                                            />
                                         </div>
                                         <InputError
                                             message={errors.kelurahan}

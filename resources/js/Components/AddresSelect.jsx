@@ -18,7 +18,7 @@ export default function AddresSelect({
             }}
             className="mt-1 rounded select select-bordered select-sm block w-full"
         >
-            <option value="">--Pilih {dist}--</option>
+            <option value={value}>{value ? value : `--Pilih ${dist}--`}</option>
             {datas.map((data, i) => {
                 return (
                     <option
