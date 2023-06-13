@@ -15,7 +15,7 @@ class UsersController extends Controller
      */
     public function all()
     {
-        $user = User::all();
+        $user = User::orderBy('kecamatan', 'asc')->get();
         $respons = [
             'user' => $user,
             'message' => 'All User',
@@ -24,7 +24,7 @@ class UsersController extends Controller
     }
     public function index($name, $place)
     {
-        $user = User::where($name, $place)->paginate(15);
+        $user = User::where($name, $place)->orderBy('kelurahan', 'asc')->paginate(15);
         $dictinct = User::select('kecamatan')->distinct()->get();
         return Inertia::render('ListUser', [
             'user' => $user,
@@ -34,13 +34,13 @@ class UsersController extends Controller
     public function dashboard()
     {
         $dictinct = User::select('kecamatan')->distinct()->get();
-        $total=User::selectRaw('kecamatan, COUNT(*) as total')
-        ->groupBy('kecamatan')
-        ->pluck('total', 'kecamatan');
+        $total = User::selectRaw('kecamatan, COUNT(*) as total')
+            ->groupBy('kecamatan')
+            ->pluck('total', 'kecamatan');
 
         return Inertia::render('Dashboard', [
             'distinct' => $dictinct,
-            'total'=>$total
+            'total' => $total
         ]);
     }
 
