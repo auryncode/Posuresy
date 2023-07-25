@@ -35,7 +35,7 @@ Route::get('/edit/{id}', [UsersController::class, 'edit'])
     ->name('add-users')->middleware('auth');
 
 Route::post('add', [UsersController::class, 'store'])->name('add');
-Route::put('update/{id}', [UsersController::class, 'update']);
+Route::patch('update/{id}', [UsersController::class, 'update']);
 
 Route::delete('/delete', [UsersController::class, 'destroy'])->name('user.destroy');
 require __DIR__ . '/auth.php';

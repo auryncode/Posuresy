@@ -60,7 +60,6 @@ import { Dialog, Transition } from "@headlessui/react";
 
 export default function Modal({setOpen,open,children}) {
     const cancelButtonRef = useRef(null);
-
     return (
         <Transition.Root show={open} as={Fragment}>
             <Dialog

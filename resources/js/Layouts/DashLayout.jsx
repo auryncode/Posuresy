@@ -19,7 +19,7 @@ export default function DashLayout({ auth, children, title }) {
                             </h1>
                             {auth && (
                                 <Link className="text-white" href="/dashboard">
-                                    Back
+                                    Home
                                 </Link>
                             )}
                         </div>

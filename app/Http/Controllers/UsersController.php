@@ -116,19 +116,16 @@ class UsersController extends Controller
         $request->validate([
             'nama' => 'required',
             'nik' => 'required|min:16',
-            'jenis_kelamin' => 'required',
-            'agama' => 'required',
-            'kecamatan' => 'required',
-            'kelurahan' => 'required',
+            'jenis_kelamin' => 'required|string',
+            'kecamatan' => 'required|string',
+            'kelurahan' => 'required|string',
             'dusun' => 'required',
         ]);
-
         $user = $user->find($id);
 
         $user->nama = $request->nama;
         $user->nik = $request->nik;
         $user->jenis_kelamin = $request->jenis_kelamin;
-        $user->agama = $request->agama;
         $user->kecamatan = $request->kecamatan;
         $user->kelurahan = $request->kelurahan;
         $user->dusun = $request->dusun;
