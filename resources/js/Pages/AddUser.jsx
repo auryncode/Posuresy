@@ -21,7 +21,7 @@ export default function AddUser(props) {
     const [delOpen, setDelOpen] = useState(false);
     const [delNik, setDelNik] = useState("");
     const [message, setMessage] = useState("");
-    
+
     useEffect(() => {
         setTimeout(() => {
             setMessage(props.flash.message);
@@ -94,18 +94,22 @@ export default function AddUser(props) {
         dusun: "",
     });
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
-        
+
         post(route("add"));
-        console.log(errors)
         if (Object.keys(errors).length === 0) {
-            setOpen(!open);
             reset();
             setKecamatan([]);
             setKabupaten([]);
             setKelurahan([]);
         }
+    };
+    const handleSucces = async () => {
+        setOpen(true);
+        setTimeout(() => {
+            setOpen(false);
+        }, 2000);
     };
     return (
         <DashLayout title="Input Pendukung">
@@ -453,6 +457,7 @@ export default function AddUser(props) {
                     </div>
                     <div className="mt-6 flex items-center justify-end gap-x-6">
                         <button
+                            onClick={handleSucces}
                             disabled={processing}
                             type="submit"
                             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -460,41 +465,43 @@ export default function AddUser(props) {
                             Save
                         </button>
                     </div>
-                    <Modal setOpen={setOpen} open={open}>
-                        <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                            <div className="sm:flex sm:items-center">
-                                <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
-                                    <CheckIcon
-                                        className="h-6 w-6 text-green-600"
-                                        aria-hidden="true"
-                                    />
-                                </div>
-                                <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                    <Dialog.Title
-                                        as="h3"
-                                        className="text-base font-semibold leading-6 text-gray-900"
-                                    >
-                                        Berhasil Menambah Pendukung
-                                    </Dialog.Title>
-                                    <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
-                                            Data berhasil disimpan dan hanya
-                                            bisa di lihat oleh Admin
-                                        </p>
+                    {props.flash.message && (
+                        <Modal setOpen={setOpen} open={open}>
+                            <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                <div className="sm:flex sm:items-center">
+                                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                                        <CheckIcon
+                                            className="h-6 w-6 text-green-600"
+                                            aria-hidden="true"
+                                        />
+                                    </div>
+                                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                        <Dialog.Title
+                                            as="h3"
+                                            className="text-base font-semibold leading-6 text-gray-900"
+                                        >
+                                            Berhasil Menambah Pendukung
+                                        </Dialog.Title>
+                                        <div className="mt-2">
+                                            <p className="text-sm text-gray-500">
+                                                Data berhasil disimpan dan hanya
+                                                bisa di lihat oleh Admin
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="sm:hidden bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button
-                                type="button"
-                                className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
-                                onClick={() => setOpen(false)}
-                            >
-                                Back
-                            </button>
-                        </div>
-                    </Modal>
+                            <div className="sm:hidden bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                <button
+                                    type="button"
+                                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                                    onClick={() => setOpen(false)}
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        </Modal>
+                    )}
                 </form>
             </div>
         </DashLayout>

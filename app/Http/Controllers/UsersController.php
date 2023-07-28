@@ -82,7 +82,9 @@ class UsersController extends Controller
         $user->dusun = $request->dusun;
 
         if ($user->save()) {
-            return redirect()->back()->with('message', 'berhasil add new user');
+            return redirect()->back()->with('message', 'Berhasil tambah pendukung');
+        } else {
+            return redirect()->back()->with('message', 'Gagal tambah pendukung');
         }
     }
 

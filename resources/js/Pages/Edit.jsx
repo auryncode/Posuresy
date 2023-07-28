@@ -385,7 +385,7 @@ export default function Edit({ auth, user, flash }) {
                             Save
                         </button>
                     </div>
-                    {
+                    {flash.message && (
                         <Modal setOpen={setOpen} open={open}>
                             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                 <div className="sm:flex sm:items-center">
@@ -420,7 +420,7 @@ export default function Edit({ auth, user, flash }) {
                                 </button>
                             </div>
                         </Modal>
-                    }
+                    )}
                 </form>
             </div>
         </DashLayout>
