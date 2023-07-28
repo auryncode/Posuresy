@@ -22,6 +22,9 @@ export default function AddUser(props) {
     const [delNik, setDelNik] = useState("");
     const [message, setMessage] = useState("");
 
+    const apiKey = import.meta.env.VITE_API_KEY;
+    const url = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         setTimeout(() => {
             setMessage(props.flash.message);
@@ -29,55 +32,39 @@ export default function AddUser(props) {
     }, [message]);
 
     const getProvinsi = async () => {
-        const res = await axios.get(
-            `https://api.binderbyte.com/wilayah/provinsi`,
-            {
-                params: {
-                    api_key:
-                        "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
-                },
-            }
-        );
+        const res = await axios.get(`${url}/provinsi`, {
+            params: {
+                api_key: apiKey,
+            },
+        });
         setProvinsi(res.data.value);
     };
     const getKabupaten = async (id) => {
-        const res = await axios.get(
-            `https://api.binderbyte.com/wilayah/kabupaten`,
-            {
-                params: {
-                    api_key:
-                        "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
-                    id_provinsi: id,
-                },
-            }
-        );
+        const res = await axios.get(`${url}/kabupaten`, {
+            params: {
+                api_key: apiKey,
+                id_provinsi: id,
+            },
+        });
         setKabupaten(res.data.value);
     };
     const getKecamatan = async (id) => {
-        const res = await axios.get(
-            `https://api.binderbyte.com/wilayah/kecamatan`,
-            {
-                params: {
-                    api_key:
-                        "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
-                    id_kabupaten: id,
-                },
-            }
-        );
+        const res = await axios.get(`${url}/kecamatan`, {
+            params: {
+                api_key: apiKey,
+                id_kabupaten: id,
+            },
+        });
         setKecamatan(res.data.value);
     };
 
     const getKelurahan = async (id) => {
-        const res = await axios.get(
-            `https://api.binderbyte.com/wilayah/kelurahan`,
-            {
-                params: {
-                    api_key:
-                        "2b89f9805e4cabab8d93b1f0105390c719740cbc5e8fff2392723354eaa23ef4",
-                    id_kecamatan: id,
-                },
-            }
-        );
+        const res = await axios.get(`${url}/kelurahan`, {
+            params: {
+                api_key: apiKey,
+                id_kecamatan: id,
+            },
+        });
         setKelurahan(res.data.value);
     };
     useEffect(() => {

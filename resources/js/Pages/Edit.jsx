@@ -19,51 +19,40 @@ export default function Edit({ auth, user, flash }) {
     const [error, setError] = useState("");
     const [open, setOpen] = useState(false);
     const apiKey = import.meta.env.VITE_API_KEY;
+    const url = import.meta.env.VITE_API_URL;
     const getProvinsi = async () => {
-        const res = await axios.get(
-            `https://api.binderbyte.com/wilayah/provinsi`,
-            {
-                params: {
-                    api_key: apiKey,
-                },
-            }
-        );
+        const res = await axios.get(`${url}/provinsi`, {
+            params: {
+                api_key: apiKey,
+            },
+        });
         setProvinsi(res.data.value);
     };
     const getKabupaten = async (id) => {
-        const res = await axios.get(
-            `https://api.binderbyte.com/wilayah/kabupaten`,
-            {
-                params: {
-                    api_key: apiKey,
-                    id_provinsi: id,
-                },
-            }
-        );
+        const res = await axios.get(`${url}/kabupaten`, {
+            params: {
+                api_key: apiKey,
+                id_provinsi: id,
+            },
+        });
         setKabupaten(res.data.value);
     };
     const getKecamatan = async (id) => {
-        const res = await axios.get(
-            `https://api.binderbyte.com/wilayah/kecamatan`,
-            {
-                params: {
-                    api_key: apiKey,
-                    id_kabupaten: id,
-                },
-            }
-        );
+        const res = await axios.get(`${url}/kecamatan`, {
+            params: {
+                api_key: apiKey,
+                id_kabupaten: id,
+            },
+        });
         setKecamatan(res.data.value);
     };
     const getKelurahan = async (id) => {
-        const res = await axios.get(
-            `https://api.binderbyte.com/wilayah/kelurahan`,
-            {
-                params: {
-                    api_key: apiKey,
-                    id_kecamatan: id,
-                },
-            }
-        );
+        const res = await axios.get(`${url}/kelurahan`, {
+            params: {
+                api_key: apiKey,
+                id_kecamatan: id,
+            },
+        });
         setKelurahan(res.data.value);
     };
     useEffect(() => {
