@@ -10,6 +10,12 @@ import Modal from "@/Components/Modal";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "@headlessui/react";
 import DeleteButton from "@/Components/DeleteButton";
+import {
+    getKabupaten,
+    getKecamatan,
+    getKelurahan,
+    getProvinsi,
+} from "@/config/Api";
 
 export default function AddUser(props) {
     const [provinsi, setProvinsi] = useState([]);
@@ -31,44 +37,41 @@ export default function AddUser(props) {
         }, 3000);
     }, [message]);
 
-    const getProvinsi = async () => {
-        const res = await axios.get(`${url}/provinsi`, {
-            params: {
-                api_key: apiKey,
-            },
-        });
-        setProvinsi(res.data.value);
+    const handleSelectProvinsi = async (e) => {
+        const index = e.target.selectedIndex;
+        const el = e.target.childNodes[index];
+        const id = el.getAttribute("id");
+
+        setData("provinsi", e.target.value);
+        const kab = await getKabupaten(url, apiKey, id);
+        setKabupaten(kab);
     };
-    const getKabupaten = async (id) => {
-        const res = await axios.get(`${url}/kabupaten`, {
-            params: {
-                api_key: apiKey,
-                id_provinsi: id,
-            },
-        });
-        setKabupaten(res.data.value);
-    };
-    const getKecamatan = async (id) => {
-        const res = await axios.get(`${url}/kecamatan`, {
-            params: {
-                api_key: apiKey,
-                id_kabupaten: id,
-            },
-        });
-        setKecamatan(res.data.value);
+    const handleSelectKabupaten = async (e) => {
+        const index = e.target.selectedIndex;
+        const el = e.target.childNodes[index];
+        const id = el.getAttribute("id");
+
+        setData("kabupaten", e.target.value);
+        const kec = await getKecamatan(url, apiKey, id);
+        setKecamatan(kec);
     };
 
-    const getKelurahan = async (id) => {
-        const res = await axios.get(`${url}/kelurahan`, {
-            params: {
-                api_key: apiKey,
-                id_kecamatan: id,
-            },
-        });
-        setKelurahan(res.data.value);
+    const handleSelectKecamatan = async (e) => {
+        const index = e.target.selectedIndex;
+        const el = e.target.childNodes[index];
+        const id = el.getAttribute("id");
+
+        setData("kecamatan", e.target.value);
+        const kel = await getKelurahan(url, apiKey, id);
+        setKelurahan(kel);
+    };
+    const handleSelectKelurahan = (e) => {
+        setData("kelurahan", e.target.value);
     };
     useEffect(() => {
-        getProvinsi();
+        getProvinsi(url, apiKey).then((prov) => {
+            setProvinsi(prov);
+        });
     }, []);
     const { data, setData, post, processing, errors, reset } = useForm({
         nama: "",
@@ -83,7 +86,6 @@ export default function AddUser(props) {
 
     const submit = async (e) => {
         e.preventDefault();
-
         post(route("add"));
         if (Object.keys(errors).length === 0) {
             reset();
@@ -149,7 +151,7 @@ export default function AddUser(props) {
                                                             className="mt-2"
                                                         />
                                                     ) : (
-                                                        <p className="text-sm text-gray-500 text-red-400">
+                                                        <p className="text-sm text-gray-500 ">
                                                             Data akan dihapus
                                                             secara permanent
                                                             pastikan NIK sudah
@@ -209,7 +211,6 @@ export default function AddUser(props) {
                                         className="mt-2"
                                     />
                                 </div>
-
                                 <div className="sm:col-span-4">
                                     <label
                                         htmlFor="nik"
@@ -244,11 +245,11 @@ export default function AddUser(props) {
                                                 id="perempuan"
                                                 type="radio"
                                                 value="perempuan"
-                                                checked={
-                                                    data.jenis_kelamin ===
-                                                    "perempuan"
-                                                }
-                                                onClick={(e) =>
+                                                // checked={
+                                                //     data.jenis_kelamin ===
+                                                //     "perempuan"
+                                                // }
+                                                onChange={(e) =>
                                                     setData(
                                                         "jenis_kelamin",
                                                         e.target.value
@@ -259,7 +260,7 @@ export default function AddUser(props) {
                                             />
                                             <label
                                                 htmlFor="perempuan"
-                                                className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                                className="w-full py-4 ml-2 text-sm font-medium text-gray-900"
                                             >
                                                 Perempuan
                                             </label>
@@ -273,7 +274,7 @@ export default function AddUser(props) {
                                                     data.jenis_kelamin ===
                                                     "laki-laki"
                                                 }
-                                                onClick={(e) =>
+                                                onChange={(e) =>
                                                     setData(
                                                         "jenis_kelamin",
                                                         e.target.value
@@ -284,7 +285,7 @@ export default function AddUser(props) {
                                             />
                                             <label
                                                 htmlFor="laki-laki"
-                                                className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                                className="w-full py-4 ml-2 text-sm font-medium text-gray-900"
                                             >
                                                 Laki-Laki
                                             </label>
@@ -295,22 +296,16 @@ export default function AddUser(props) {
                                         className="mt-2"
                                     />
                                 </div>
-
                                 <div className="col-span-full">
-                                    <label
-                                        htmlFor="provinsi"
-                                        className="block text-sm font-medium leading-6 text-gray-900"
-                                    >
-                                        Provinsi
-                                    </label>
                                     <div className="mt-2">
+                                        <label
+                                            htmlFor="provinsi"
+                                            className="block text-sm font-medium leading-6 text-gray-900"
+                                        >
+                                            Provinsi
+                                        </label>
                                         <select
-                                            onChange={(e) => {
-                                                setData(
-                                                    "provinsi",
-                                                    e.target.value
-                                                );
-                                            }}
+                                            onChange={handleSelectProvinsi}
                                             value={data.provinsi}
                                             id="addres"
                                             className="mt-1 rounded select select-bordered select-sm block w-full"
@@ -318,16 +313,12 @@ export default function AddUser(props) {
                                             <option value="">
                                                 --Pilih Provinsi--
                                             </option>
-                                            {provinsi.map((prov, i) => {
+                                            {provinsi.map((prov) => {
                                                 return (
                                                     <option
-                                                        key={i}
+                                                        id={prov.id}
+                                                        key={prov.id}
                                                         value={prov.name}
-                                                        onClick={() =>
-                                                            getKabupaten(
-                                                                prov.id
-                                                            )
-                                                        }
                                                     >
                                                         {prov.name}
                                                     </option>
@@ -351,11 +342,10 @@ export default function AddUser(props) {
                                         </label>
                                         <div className="mt-2">
                                             <AddresSelect
-                                                getKecamatan={getKecamatan}
+                                                onChange={handleSelectKabupaten}
                                                 value={data.kabupaten}
                                                 datas={kabupaten}
                                                 dist="Kabupaten"
-                                                setDatas={setData}
                                             />
                                         </div>
                                         <InputError
@@ -374,11 +364,10 @@ export default function AddUser(props) {
                                         </label>
                                         <div className="mt-2">
                                             <AddresSelect
-                                                getKelurahan={getKelurahan}
+                                                onChange={handleSelectKecamatan}
                                                 value={data.kecamatan}
                                                 datas={kecamatan}
                                                 dist="Kecamatan"
-                                                setDatas={setData}
                                             />
                                         </div>
                                         <InputError
@@ -397,10 +386,10 @@ export default function AddUser(props) {
                                         </label>
                                         <div className="mt-2">
                                             <AddresSelect
+                                                onChange={handleSelectKelurahan}
                                                 value={data.kelurahan}
                                                 datas={kelurahan}
                                                 dist="Kelurahan"
-                                                setDatas={setData}
                                             />
                                         </div>
                                         <InputError
@@ -478,7 +467,7 @@ export default function AddUser(props) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="sm:hidden bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                            <div className="hidden bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                 <button
                                     type="button"
                                     className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"

@@ -15,12 +15,21 @@ class UsersController extends Controller
      */
     public function all()
     {
-        $user = User::orderBy('kecamatan', 'asc')->get();
-        $respons = [
-            'user' => $user,
-            'message' => 'All User',
-        ];
-        return response()->json($respons);
+        if (auth()->check()) {
+            
+            $user = User::orderBy('kecamatan', 'asc')->get();
+            $respons = [
+                'user' => $user,
+                'message' => 'All User',
+            ];
+            return response()->json($respons);
+        }else{
+            return response()->json([
+                'message'=>'Login dulu',
+                'user'=>auth()->user(),
+                'status_login'=>auth()->check(),
+            ]);
+        }
     }
     public function index($name, $place)
     {

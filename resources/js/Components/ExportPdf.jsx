@@ -6,8 +6,10 @@ import axios from "axios";
 
 const ExportPdf = ({ className = "" }, ...props) => {
     const [data, setData] = useState([]);
+    const url=import.meta.env.VITE_LOCAL_API
+
     const getData = async () => {
-        const res = await axios.get("http://localhost:8000/api/all");
+        const res = await axios.get(`${url}/api/all`);
         setData(res.data.user);
     };
     useEffect(() => {

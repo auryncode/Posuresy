@@ -1,35 +1,16 @@
 import React from "react";
 
-export default function AddresSelect({
-    datas,
-    dist,
-    setDatas,
-    getKecamatan,
-    getKelurahan,
-    value,
-}) {
+export default function AddresSelect({ datas, dist, onChange, value, data }) {
     return (
         <select
             value={value}
-            onChange={(e) => {
-                dist == "Kabupaten" && setDatas("kabupaten", e.target.value);
-                dist == "Kecamatan" && setDatas("kecamatan", e.target.value);
-                dist == "Kelurahan" && setDatas("kelurahan", e.target.value);
-            }}
+            onChange={onChange}
             className="mt-1 rounded select select-bordered select-sm block w-full"
         >
-            <option value={value}>{value ? value : `--Pilih ${dist}--`}</option>
+            <option value={value}>{value ? value : `--${dist}--`}</option>
             {datas.map((data, i) => {
                 return (
-                    <option
-                        key={i}
-                        value={data.name}
-                        onClick={() => {
-                            dist == "Kabupaten" && getKecamatan(data.id);
-                            dist == "Kecamatan" && getKelurahan(data.id);
-                            dist == "Kelurahan";
-                        }}
-                    >
+                    <option key={i} value={data.name} id={data.id}>
                         {data.name}
                     </option>
                 );

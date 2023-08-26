@@ -10,6 +10,12 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import Modal from "@/Components/Modal";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "@headlessui/react";
+import {
+    getKabupaten,
+    getKecamatan,
+    getKelurahan,
+    getProvinsi,
+} from "@/config/Api";
 
 export default function Edit({ auth, user, flash }) {
     const [provinsi, setProvinsi] = useState([]);
@@ -20,44 +26,44 @@ export default function Edit({ auth, user, flash }) {
     const [open, setOpen] = useState(false);
     const apiKey = import.meta.env.VITE_API_KEY;
     const url = import.meta.env.VITE_API_URL;
-    const getProvinsi = async () => {
-        const res = await axios.get(`${url}/provinsi`, {
-            params: {
-                api_key: apiKey,
-            },
-        });
-        setProvinsi(res.data.value);
+
+    const handleSelectProvinsi = async (e) => {
+        const index = e.target.selectedIndex;
+        const el = e.target.childNodes[index];
+        const id = el.getAttribute("id");
+
+        setData("provinsi", e.target.value);
+        const kab = await getKabupaten(url, apiKey, id);
+        setKabupaten(kab);
     };
-    const getKabupaten = async (id) => {
-        const res = await axios.get(`${url}/kabupaten`, {
-            params: {
-                api_key: apiKey,
-                id_provinsi: id,
-            },
-        });
-        setKabupaten(res.data.value);
+    const handleSelectKabupaten = async (e) => {
+        const index = e.target.selectedIndex;
+        const el = e.target.childNodes[index];
+        const id = el.getAttribute("id");
+
+        setData("kabupaten", e.target.value);
+        const kec = await getKecamatan(url, apiKey, id);
+        setKecamatan(kec);
     };
-    const getKecamatan = async (id) => {
-        const res = await axios.get(`${url}/kecamatan`, {
-            params: {
-                api_key: apiKey,
-                id_kabupaten: id,
-            },
-        });
-        setKecamatan(res.data.value);
+
+    const handleSelectKecamatan = async (e) => {
+        const index = e.target.selectedIndex;
+        const el = e.target.childNodes[index];
+        const id = el.getAttribute("id");
+
+        setData("kecamatan", e.target.value);
+        const kel = await getKelurahan(url, apiKey, id);
+        setKelurahan(kel);
     };
-    const getKelurahan = async (id) => {
-        const res = await axios.get(`${url}/kelurahan`, {
-            params: {
-                api_key: apiKey,
-                id_kecamatan: id,
-            },
-        });
-        setKelurahan(res.data.value);
+    const handleSelectKelurahan = (e) => {
+        setData("kelurahan", e.target.value);
     };
     useEffect(() => {
-        getProvinsi();
+        getProvinsi(url, apiKey).then((prov) => {
+            setProvinsi(prov);
+        });
     }, []);
+
     const { data, setData, errors, reset, patch } = useForm({
         nama: user.nama,
         nik: user.nik,
@@ -71,6 +77,7 @@ export default function Edit({ auth, user, flash }) {
     const submit = (e) => {
         e.preventDefault();
         patch(`/update/${user.id}`);
+        reset();
     };
     const handleSucces = () => {
         setOpen(true);
@@ -168,11 +175,11 @@ export default function Edit({ auth, user, flash }) {
                                                     )
                                                 }
                                                 name="bordered-radio"
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                             />
                                             <label
                                                 htmlFor="bordered-radio-1"
-                                                className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                                className="w-full py-4 ml-2 text-sm font-medium text-black"
                                             >
                                                 Perempuan
                                             </label>
@@ -218,12 +225,7 @@ export default function Edit({ auth, user, flash }) {
                                     </label>
                                     <div className="mt-2">
                                         <select
-                                            onChange={(e) => {
-                                                setData(
-                                                    "provinsi",
-                                                    e.target.value
-                                                );
-                                            }}
+                                            onChange={handleSelectProvinsi}
                                             value={data.provinsi}
                                             id="addres"
                                             className="mt-1 rounded select select-bordered select-sm block w-full"
@@ -238,11 +240,7 @@ export default function Edit({ auth, user, flash }) {
                                                     <option
                                                         key={i}
                                                         value={prov.name}
-                                                        onClick={() =>
-                                                            getKabupaten(
-                                                                prov.id
-                                                            )
-                                                        }
+                                                        id={prov.id}
                                                     >
                                                         {prov.name}
                                                     </option>
@@ -266,11 +264,10 @@ export default function Edit({ auth, user, flash }) {
                                         </label>
                                         <div className="mt-2">
                                             <AddresSelect
-                                                getKecamatan={getKecamatan}
+                                                onChange={handleSelectKabupaten}
                                                 value={data.kabupaten}
                                                 datas={kabupaten}
                                                 dist="Kabupaten"
-                                                setDatas={setData}
                                             />
                                         </div>
                                         <InputError
@@ -289,11 +286,10 @@ export default function Edit({ auth, user, flash }) {
                                         </label>
                                         <div className="mt-2">
                                             <AddresSelect
-                                                getKelurahan={getKelurahan}
+                                                onChange={handleSelectKecamatan}
                                                 value={data.kecamatan}
                                                 datas={kecamatan}
                                                 dist="Kecamatan"
-                                                setDatas={setData}
                                             />
                                         </div>
                                         <InputError
@@ -312,6 +308,7 @@ export default function Edit({ auth, user, flash }) {
                                         </label>
                                         <div className="mt-2">
                                             <AddresSelect
+                                                onChange={handleSelectKelurahan}
                                                 value={data.kelurahan}
                                                 datas={kelurahan}
                                                 dist="Kelurahan"
@@ -399,7 +396,7 @@ export default function Edit({ auth, user, flash }) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="sm:hidden bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                            <div className="hidden bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                 <button
                                     type="button"
                                     className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
