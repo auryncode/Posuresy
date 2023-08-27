@@ -1,68 +1,149 @@
-import React, { useEffect, useState } from "react";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import { CloudArrowDownIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
+import React, { useState } from "react";
+import {
+    Document,
+    Page,
+    Text,
+    View,
+    StyleSheet,
+    PDFViewer,
+    PDFDownloadLink,
+} from "@react-pdf/renderer";
+import Modal from "react-modal";
 
-const ExportPdf = ({ className = "" }, ...props) => {
-    const [data, setData] = useState([]);
-    const url=import.meta.env.VITE_LOCAL_API
+const styles = StyleSheet.create({
+    page: {
+        flexDirection: "column",
+        padding: 20,
+    },
+    header: {
+        marginBottom: 10,
+    },
+    headerText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    table: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginTop: 10,
+    },
+    tableRow: {
+        flexDirection: "row",
+        borderBottomWidth: 1,
+        borderColor: "#000",
+        paddingBottom: 5,
+        marginBottom: 5,
+        alignContent: "center",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    columnHeader: {
+        width: "33.33%",
+        fontWeight: "bold",
+        fontSize: 15,
+    },
+    columnCell: {
+        width: "33.33%",
+        fontSize: 10,
+    },
+});
+const customStyles = {
+    content: {
+        top: "50%",
+        left: "50%",
+        right: "auto",
+        bottom: "auto",
+        marginRight: "-50%",
+        transform: "translate(-50%, -50%)",
+    },
+};
 
-    const getData = async () => {
-        const res = await axios.get(`${url}/api/all`);
-        setData(res.data.user);
+const PDFDocument = ({ data }) => (
+    <Document>
+        <Page size="LETTER" style={styles.page}>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>Data Tabel</Text>
+            </View>
+            <View style={styles.table}>
+                <View style={styles.tableRow}>
+                    <Text style={styles.columnHeader}>Nik</Text>
+                    <Text style={styles.columnHeader}>Nama</Text>
+                    <Text style={styles.columnHeader}>Jenis Kelamin</Text>
+                    <Text style={styles.columnHeader}>Alamat</Text>
+                </View>
+                {data.map((item) => (
+                    <View key={item.id} style={styles.tableRow}>
+                        <Text style={styles.columnCell}>{item.nik}</Text>
+                        <Text style={styles.columnCell}>{item.nama}</Text>
+                        <Text style={styles.columnCell}>
+                            {item.jenis_kelamin}
+                        </Text>
+                        <Text style={styles.columnCell}>{`${item.dusun}
+                        ${item.provinsi}
+                        ${item.kabupaten}
+                        ${item.kecamatan}
+                        ${item.kelurahan}`}</Text>
+                    </View>
+                ))}
+            </View>
+        </Page>
+    </Document>
+);
+
+export const DownloadPDF = ({ className, data }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const triggerModal = () => {
+        setIsOpen(!isOpen);
     };
-    useEffect(() => {
-        getData();
-    }, []);
-    const exportPDF = () => {
-        const doc = new jsPDF({
-            format: "letter",
-            orientation: "portrait",
-            compress: true,
-            precision: 2,
-        });
-        doc.getFontList({ times: ["normal"] });
-        doc.setFont("times new roman");
-        doc.setFontSize(18);
+    const handleClose = () => {
+        setIsOpen(!isOpen);
+    };
 
-        doc.text("Laporan Data Pendukung Kab.Karanganyar ", 100, 10, {
-            align: "center",
-        });
-        doc.autoTable({
-            head: [["Nama", "NIK", "Jenis kelamin", "Alamat"]],
-            body: data.map((res) => [
-                res.nama,
-                res.nik,
-                res.jenis_kelamin,
-                `${res.dusun},${res.kelurahan},${res.kecamatan},${res.kabupaten},${res.provinsi}`,
-            ]),
-            styles: {
-                font: "times new roman",
-                fontSize: 12,
-                head: {
-                    fontSize: 14,
-                    fontStyle: "bold",
-                },
-                body: { font: "times new roman", fontSize: 12 },
-            },
-        });
-        doc.save("Data pendukung kabupaten karanganyar.pdf");
+    return (
+        <div>
+            <PDFDownloadLink
+                className={`text-sm font-sans font-medium sm:text-base rounded py-2 px-6 flex flex-row justify-center align-center gap-2 border-none hover:text-white ${className}`}
+                document={<PDFDocument data={data} />}
+                fileName="Data semua pendukung.pdf"
+                target="_blank" // Membuka tautan dalam tab baru
+            >
+                {({ blob, url, loading, error }) =>
+                    loading ? "Generating PDF..." : "Export to PDF"
+                }
+            </PDFDownloadLink>
+        </div>
+    );
+};
+export const ExportPDF = ({ className, data }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const triggerModal = () => {
+        setIsOpen(!isOpen);
+    };
+    const handleClose = () => {
+        setIsOpen(!isOpen);
     };
 
     return (
         <div>
             <button
-                name="download"
-                {...props}
-                onClick={exportPDF}
-                className={`font-sans font-medium text-base rounded py-2 px-6 flex flex-row justify-center align-center gap-2 hover:bg-blue-600 hover:text-white ${className}`}
+                className={`text-sm font-sans font-medium sm:text-base rounded py-2 px-6 flex flex-row justify-center align-center gap-2 border-none hover:text-white ${className}`}
+                onClick={triggerModal}
             >
-                <CloudArrowDownIcon className="h-6 w-6 text-blue-400" />
-                Download
+                Export to PDF
             </button>
+            <Modal
+                isOpen={isOpen}
+                onRequestClose={handleClose}
+                style={customStyles}
+                contentLabel="Export MOdal"
+            >
+                <PDFViewer style={{ width: "80vw", height: "90vh" }}>
+                    <PDFDocument data={data} />
+                </PDFViewer>
+            </Modal>
         </div>
     );
 };
-
-export default ExportPdf;

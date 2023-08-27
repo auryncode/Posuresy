@@ -64,7 +64,7 @@ export default function Edit({ auth, user, flash }) {
         });
     }, []);
 
-    const { data, setData, errors, reset, patch } = useForm({
+    const { data, setData, errors, patch } = useForm({
         nama: user.nama,
         nik: user.nik,
         jenis_kelamin: user.jenis_kelamin,
@@ -77,7 +77,6 @@ export default function Edit({ auth, user, flash }) {
     const submit = (e) => {
         e.preventDefault();
         patch(`/update/${user.id}`);
-        reset();
     };
     const handleSucces = () => {
         setOpen(true);

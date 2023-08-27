@@ -1,6 +1,5 @@
 import Dropdown from "@/Components/Dropdown";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
-import ExportPdf from "@/Components/ExportPdf";
 import { Link } from "@inertiajs/react";
 import { createElement, useState } from "react";
 import {
@@ -16,8 +15,6 @@ export default function AuthenticatedLayout({
     user = [],
     header = "",
     children,
-    data = [],
-    className,
 }) {
     const [open, setIsOpen] = useState(true);
     const [openDropdown, setOpenDropdown] = useState(true);
@@ -215,9 +212,6 @@ export default function AuthenticatedLayout({
                                 >
                                     Log Out
                                 </Link>
-                                {data && (
-                                    <ExportPdf className="w-full" data={data} />
-                                )}
                             </div>
                         </div>
                     </div>

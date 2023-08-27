@@ -1,14 +1,13 @@
 import '../js/bootstrap';
 import '../css/app.css';
-
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import Modal from 'react-modal';
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
-
+Modal.setAppElement('#root');
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => `${title} | Pendataan`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
     setup({ el, App, props }) {
         const root = createRoot(el);

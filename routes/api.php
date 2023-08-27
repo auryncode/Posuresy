@@ -17,7 +17,6 @@ use App\Http\Controllers\UsersController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::delete('/delete/{nik}', [UsersController::class, 'delete']);
 
-Route::get('/all', [UsersController::class, 'all'])
+Route::middleware('auth')->get('/all', [UsersController::class, 'all'])
     ->name('all-users');

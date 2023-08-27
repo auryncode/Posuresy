@@ -1,10 +1,9 @@
 import Accordion from "@/Components/Accordion";
 import DeleteButton from "@/Components/DeleteButton";
-import ExportPdf from "@/Components/ExportPdf";
+import { ExportPDF } from "@/Components/ExportPdf";
 import Paginate from "@/Components/Paginate";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
-import axios from "axios";
 import React, { createElement, useEffect, useState } from "react";
 import { HiOutlinePencilAlt, HiOutlineTrash } from "react-icons/hi";
 
@@ -123,14 +122,9 @@ const NoList = () => {
 };
 export default function ListUser(props) {
     const { auth, distinct, user } = props;
+    console.log(user.data)
     return (
         <AuthenticatedLayout
-            header={
-                <ExportPdf
-                    className="bg-blue-700 shadow hidden sm:flex"
-                    data={user.data}
-                />
-            }
             user={auth.user}
             data={user.data}
             distinct={distinct}

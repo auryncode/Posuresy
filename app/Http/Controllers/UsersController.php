@@ -13,24 +13,6 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
-    {
-        if (auth()->check()) {
-            
-            $user = User::orderBy('kecamatan', 'asc')->get();
-            $respons = [
-                'user' => $user,
-                'message' => 'All User',
-            ];
-            return response()->json($respons);
-        }else{
-            return response()->json([
-                'message'=>'Login dulu',
-                'user'=>auth()->user(),
-                'status_login'=>auth()->check(),
-            ]);
-        }
-    }
     public function index($name, $place)
     {
         $user = User::where($name, $place)->orderBy('kelurahan', 'asc')->paginate(15);
@@ -42,6 +24,7 @@ class UsersController extends Controller
     }
     public function dashboard()
     {
+        $user = User::orderBy('kecamatan', 'asc')->get();
         $dictinct = User::select('kecamatan')->distinct()->get();
         $total = User::selectRaw('kecamatan, COUNT(*) as total')
             ->groupBy('kecamatan')
@@ -49,7 +32,8 @@ class UsersController extends Controller
 
         return Inertia::render('Dashboard', [
             'distinct' => $dictinct,
-            'total' => $total
+            'total' => $total,
+            'dataAllUser' => $user
         ]);
     }
 
@@ -128,6 +112,8 @@ class UsersController extends Controller
             'nama' => 'required',
             'nik' => 'required|min:16',
             'jenis_kelamin' => 'required|string',
+            'provinsi' => 'required|string',
+            'kabupaten' => 'required|string',
             'kecamatan' => 'required|string',
             'kelurahan' => 'required|string',
             'dusun' => 'required',
@@ -137,6 +123,8 @@ class UsersController extends Controller
         $user->nama = $request->nama;
         $user->nik = $request->nik;
         $user->jenis_kelamin = $request->jenis_kelamin;
+        $user->provinsi = $request->provinsi;
+        $user->kabupaten = $request->kabupaten;
         $user->kecamatan = $request->kecamatan;
         $user->kelurahan = $request->kelurahan;
         $user->dusun = $request->dusun;
