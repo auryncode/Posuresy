@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 
 export default function Dashboard({ auth, distinct, total, dataAllUser }) {
+console.log('date',Date())
     return (
         <AuthenticatedLayout user={auth.user} distinct={distinct}>
             <Head title="Dashboard" />

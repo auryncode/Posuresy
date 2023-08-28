@@ -122,7 +122,6 @@ const NoList = () => {
 };
 export default function ListUser(props) {
     const { auth, distinct, user } = props;
-    console.log(user.data)
     return (
         <AuthenticatedLayout
             user={auth.user}

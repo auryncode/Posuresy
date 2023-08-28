@@ -203,7 +203,7 @@ export default function Edit({ auth, user, flash }) {
                                             />
                                             <label
                                                 htmlFor="bordered-radio-2"
-                                                className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                                className="w-full py-4 ml-2 text-sm font-medium text-gray-900"
                                             >
                                                 Laki-Laki
                                             </label>

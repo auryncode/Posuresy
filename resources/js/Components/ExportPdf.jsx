@@ -58,12 +58,11 @@ const customStyles = {
         transform: "translate(-50%, -50%)",
     },
 };
-
 const PDFDocument = ({ data }) => (
     <Document>
         <Page size="LETTER" style={styles.page}>
             <View style={styles.header}>
-                <Text style={styles.headerText}>Data Tabel</Text>
+                <Text style={styles.headerText}>Data Pendukung </Text>
             </View>
             <View style={styles.table}>
                 <View style={styles.tableRow}>
