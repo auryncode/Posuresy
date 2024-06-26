@@ -21,7 +21,7 @@ class UserFactory extends Factory
             'id' => Str::uuid(),
             'nama' => fake()->name(),
             'nik' => \str_pad(mt_rand(1, 9999999999999999), 16),
-            'jenis_kelamin' => fake()->sentence(3),
+            'jenis_kelamin' => fake()->randomElement(['laki-laki', 'perempuan']),
             'provinsi' => 'jawa tengah',
             'kabupaten' => 'karanganyar',
             'kecamatan' => 'jumantono',

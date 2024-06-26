@@ -55,7 +55,7 @@ const List = (user, message) => {
                         <tbody className="divide-y divide-gray-100 border-t border-gray-100">
                             {user.map((data, i) => {
                                 return (
-                                    <tr className="hover:bg-gray-50">
+                                    <tr key={i} className="hover:bg-gray-50">
                                         <th className="flex gap-3 px-6 py-4 font-normal text-gray-900">
                                             <div className="text-sm">
                                                 <div className="font-medium text-gray-700">

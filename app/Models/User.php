@@ -27,5 +27,8 @@ class User extends Model
         'kelurahan',
         'dusun',
     ];
+    protected $casts = [
+        'id' => 'string',
+    ];
 
 }

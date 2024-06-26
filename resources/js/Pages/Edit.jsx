@@ -64,6 +64,7 @@ export default function Edit({ auth, user, flash }) {
         });
     }, []);
 
+
     const { data, setData, errors, patch } = useForm({
         nama: user.nama,
         nik: user.nik,
@@ -167,7 +168,7 @@ export default function Edit({ auth, user, flash }) {
                                                     data.jenis_kelamin ===
                                                     "perempuan"
                                                 }
-                                                onClick={(e) =>
+                                                onChange={(e) =>
                                                     setData(
                                                         "jenis_kelamin",
                                                         e.target.value
@@ -192,7 +193,7 @@ export default function Edit({ auth, user, flash }) {
                                                     data.jenis_kelamin ===
                                                     "laki-laki"
                                                 }
-                                                onClick={(e) =>
+                                                onChange={(e) =>
                                                     setData(
                                                         "jenis_kelamin",
                                                         e.target.value
